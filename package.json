@@ -1,0 +1,14 @@
+{
+  "name": "webp-vue",
+  "version": "1.0.0",
+  "description": "Generating and serving webp images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Grant Sander",
+  "license": "ISC",
+  "devDependencies": {
+    "sharp": "^0.22.0"
+  }
+}
