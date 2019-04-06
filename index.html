@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Webp Example</title>
+</head>
+<body>
+  <div id="app">
+    <h1>Webp supported: {{ webpSupported ? 'Yes' : 'No' }}</h1>
+
+    <!-- Show the chair photo -->
+    <img
+      :src="transformImgExt('/images/chair_1000.png')"
+      width="150px"
+    />
+
+    <!-- Show the dog photo -->
+    <img
+      :src="transformImgExt('/images/dog_1000.jpg')"
+      width="150px"
+    />
+
+  </div>
+
+  <!-- Javascript here. -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js'></script>
+  <script>
+    // Initiate our Vue app
+    (function initApp(){
+      let app = new Vue({
+        // What should we mount our Vue instance to?
+        el: "#app",
+
+        // App data
+        data: {
+          // We'll initially assume webp is supported
+          webpSupported: true
+        },
+
+        // Methods
+        methods: {
+          /**
+           * Helper to transform image extension.
+           * Checks if webp is supported, and will swap out the image extension accordingly.
+           */
+          transformImgExt (url) {
+            // If webp is supported, transform the url
+            if (this.webpSupported) {
+              return url.replace(/\.\w{1,5}$/, ".webp");
+            } else { // Otherwise, just return the original
+              return url;
+            }
+          }
+        },
+
+        /**
+         * When app is "created", we'll run some checks to see if the browser supports webp
+         */
+        created() {
+          (async () => {
+            // If browser doesn't have createImageBitmap, we can't use webp.
+            if (!self.createImageBitmap) {
+              this.webpSupported = false;
+              return;
+            }
+            
+            // Base64 representation of a white point image
+            const webpData = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEAAQAcJaQAA3AA/v3AgAA=';
+            // Retrieve the Image in Blob Format
+            const blob = await fetch(webpData).then(r => r.blob());
+            // If the createImageBitmap method succeeds, return true, otherwise false
+            this.webpSupported = await createImageBitmap(blob).then(() => true, () => false);
+
+          })();
+        } // End created
+
+      })
+    })();
+  </script>
+</body>
+</html>
